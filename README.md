@@ -11,7 +11,8 @@ This repo is focused on:
 - `cmd/server/main.go` - Go HTTP server
 - `cmd/server/main_test.go` - unit tests
 - `cmd/server/integration_test.go` - integration tests
-- `Dockerfile` - multi-stage Docker build
+- `Dockerfile` - standard image
+- `Dockerfile.dev` - development image
 - `Makefile` - local run/test/docker commands
 - `.github/workflows/ci.yml` - GitHub Actions CI pipeline
 
@@ -63,25 +64,23 @@ make test
 
 ## Docker
 
-Build image (default local tag):
+Build/run standard image (`Dockerfile`):
 
 ```bash
 make docker-build
-```
-
-Run container:
-
-```bash
 make docker-run
-```
-
-Verify:
-
-```bash
 curl http://localhost:8080/healthz
 ```
 
-Stop container:
+Build/run development image (`Dockerfile.dev`):
+
+```bash
+make docker-build-dev
+make docker-run-dev
+curl http://localhost:8080/healthz
+```
+
+Stop containers:
 
 ```bash
 make docker-stop
@@ -113,10 +112,3 @@ On every push and pull request to every branch, CI runs:
 1. `make test-unit`
 2. `make test-integration`
 3. `make docker-build IMAGE=local/go-webserver TAG=ci`
-
-## Learning path
-
-1. Run app locally with `make run`
-2. Run tests with `make test`
-3. Build and run Docker image
-4. Push to GitHub and confirm Actions passes
