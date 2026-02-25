@@ -21,6 +21,36 @@ func TestIntegrationHealthEndpoint(t *testing.T) {
 	}
 }
 
+func TestIntegrationReadinessEndpoint(t *testing.T) {
+	ts := httptest.NewServer(newMux())
+	defer ts.Close()
+
+	resp, err := http.Get(ts.URL + "/readyz")
+	if err != nil {
+		t.Fatalf("readiness request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", resp.StatusCode)
+	}
+}
+
+func TestIntegrationLivenessEndpoint(t *testing.T) {
+	ts := httptest.NewServer(newMux())
+	defer ts.Close()
+
+	resp, err := http.Get(ts.URL + "/livez")
+	if err != nil {
+		t.Fatalf("liveness request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", resp.StatusCode)
+	}
+}
+
 func TestIntegrationHelloEndpoint(t *testing.T) {
 	ts := httptest.NewServer(newMux())
 	defer ts.Close()
@@ -28,6 +58,21 @@ func TestIntegrationHelloEndpoint(t *testing.T) {
 	resp, err := http.Get(ts.URL + "/hello?name=HP")
 	if err != nil {
 		t.Fatalf("hello request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected status 200, got %d", resp.StatusCode)
+	}
+}
+
+func TestIntegrationRootEndpoint(t *testing.T) {
+	ts := httptest.NewServer(newMux())
+	defer ts.Close()
+
+	resp, err := http.Get(ts.URL + "/")
+	if err != nil {
+		t.Fatalf("root request failed: %v", err)
 	}
 	defer resp.Body.Close()
 
